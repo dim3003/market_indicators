@@ -6,7 +6,7 @@ class Indicator():
     def __init__(self, df_price=None):
         self.df_price = df_price
         self.returns = self.get_returns()
-        self.metrics = pd.DataFrame()
+        self.metrics = self.basic_metrics()
     
     def __str__(self):
         print(50*"=")
@@ -21,7 +21,13 @@ class Indicator():
         r = r.product() - 1
         return r
 
-    def _confidence_rating(data):
+    @staticmethod
+    def _confidence_rating(data, mu=0, side=None):
+        if len(data) > 30:
+               # get the mean
+               data.mean()
+               # get the volatility
+
         pass
 
     def get_returns(self, ffill=0, percentage_outlier=1):
@@ -48,8 +54,10 @@ class Indicator():
         df_returns = pd.DataFrame(df_temp, columns = df_returns.columns, index=df_returns.index)
         return df_returns
 
-    def basic_metrics():
+    def basic_metrics(self):
+        result = pd.DataFrame()
         #returns
+        print(self._total_returns(self.returns))
         #volatility
         #sharpe
         #TE
