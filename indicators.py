@@ -6,14 +6,23 @@ class Indicator():
     def __init__(self, df_price=None):
         self.df_price = df_price
         self.returns = self.get_returns()
-        self.total_returns = self.total_returns()
+        self.metrics = pd.DataFrame()
     
     def __str__(self):
         print(50*"=")
         print("METRICS")
         print(50*"-")
-        print(self.total_returns)
+        print(self.metrics)
         return ""
+    
+    @staticmethod
+    def _total_returns(returns):
+        r = returns + 1
+        r = r.product() - 1
+        return r
+
+    def _confidence_rating(data):
+        pass
 
     def get_returns(self, ffill=0, percentage_outlier=1):
         """
@@ -38,11 +47,16 @@ class Indicator():
         df_temp = df_temp.values.reshape(og_shape)
         df_returns = pd.DataFrame(df_temp, columns = df_returns.columns, index=df_returns.index)
         return df_returns
+
+    def basic_metrics():
+        #returns
+        #volatility
+        #sharpe
+        #TE
+        #IR
+        #excess returns
     
-    def total_returns(self):
-        r = self.returns + 1
-        r = r.product() - 1
-        return r
+    
 
 if __name__ == '__main__':
     print(40*"=")
