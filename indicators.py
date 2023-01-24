@@ -55,14 +55,16 @@ class Indicator():
         return df_returns
 
     def basic_metrics(self):
-        result = pd.DataFrame()
+        #Set up dataframe
+        df = pd.DataFrame(columns=self.df_price.columns)
         #returns
-        print(self._total_returns(self.returns))
+        df.loc["returns",:] = self._total_returns(self.returns).values
         #volatility
         #sharpe
         #TE
         #IR
         #excess returns
+        return df
     
     
 
