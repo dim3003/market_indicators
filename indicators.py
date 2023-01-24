@@ -40,7 +40,6 @@ class Indicator():
                 return 1
             else:
                 return 0
-
         # get the mean
         x_bar = data.mean()
         # get the volatility
@@ -54,7 +53,6 @@ class Indicator():
         confidence_levels = perc_to_level(p_value)
     
         return confidence_levels
-        pass
 
     def get_returns(self, ffill=0, percentage_outlier=1):
         """
@@ -85,7 +83,7 @@ class Indicator():
         df = pd.DataFrame(columns=self.df_price.columns)
         #returns
         df.loc["returns",:] = self._total_returns(self.returns).values
-        self._confidence_rating(self.returns)
+        df.loc["returns_confidence_level", :] = self._confidence_rating(self.returns)
         #volatility
         #sharpe
         #TE
