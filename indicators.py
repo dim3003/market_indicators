@@ -1,6 +1,7 @@
-import datetime
+import datetime, math
 import pandas as pd 
 import numpy as np
+import scipy.stats
 
 class Indicator():
     def __init__(self, df_price=None):
@@ -22,12 +23,37 @@ class Indicator():
         return r
 
     @staticmethod
-    def _confidence_rating(data, mu=0, side=None):
-        if len(data) > 30:
-               # get the mean
-               data.mean()
-               # get the volatility
+    def _confidence_rating(data, mu=0, two_tailed=0):
+        """
+        Gives back the confidence level in terms of stars for each data column
+        - 1 star > 0.9
+        - 2 star > 0.95
+        - 3 star > 0.99
+        """
+        
+        def perc_to_level(x):
+            if x < 0.01:
+                return 3
+            elif x < 0.05:
+                return 2
+            elif x < 0.1:
+                return 1
+            else:
+                return 0
 
+        # get the mean
+        x_bar = data.mean()
+        # get the volatility
+        sigma = data.std()
+        # z-score
+        z = (x_bar-mu)/(sigma/math.sqrt(len(data)))
+        # get the percentage of confidence
+        p_value = scipy.stats.norm.sf(abs(z)) * (1 + two_tailed)
+        #transform to confidence levels
+        perc_to_level = np.vectorize(perc_to_level)
+        confidence_levels = perc_to_level(p_value)
+    
+        return confidence_levels
         pass
 
     def get_returns(self, ffill=0, percentage_outlier=1):
@@ -59,6 +85,7 @@ class Indicator():
         df = pd.DataFrame(columns=self.df_price.columns)
         #returns
         df.loc["returns",:] = self._total_returns(self.returns).values
+        self._confidence_rating(self.returns)
         #volatility
         #sharpe
         #TE
